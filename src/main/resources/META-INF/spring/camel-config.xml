@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.12.2.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf-2.12.2-spring.xsd">
+
+    <!--<cxf:rsClient id="wmataBusLineSvc"-->
+                  <!--address="http://api.wmata.com/Bus.svc/json/jRoutes?api_key=kfgpmgvfgacx98de9q3xazww"-->
+                  <!--serviceClass="com.wireandwheel.demonstrations.ws.service.RemoteService"-->
+                  <!--loggingFeatureEnabled="true" skipFaultLogging="true">-->
+    <!--</cxf:rsClient>-->
+
+    <bean id="itemRetriever" class="com.wireandwheel.demonstrations.ws.processors.ItemRetriever"/>
+    <!-- Camel route initialization via Java DSL-->
+    <bean id="camelRouting" class="com.wireandwheel.demonstrations.ws.routes.ServerRoutes"/>
+
+    <!-- The camel route context -->
+    <camel:camelContext xmlns="http://camel.apache.org/schema/spring">
+
+        <contextScan/>
+        <camel:template id="camelTemplate"/>
+        <camel:routeBuilder ref="camelRouting"/>
+
+        <dataFormats>
+            <json id="json" library="Jackson"/>
+        </dataFormats>
+
+        <!-- How to set up connection through a proxy server? -->
+        <!--<properties>-->
+        <!--<property xml:id="http.proxyHost">127.0.0.1</property>-->
+        <!--</properties>-->
+        <!--<proxy serviceUrl="127.0.0.1" serviceInterface="8888"/>-->
+
+        <!--<route>-->
+            <!--<from uri="timer:aTimer?fixedRate=true&amp;period=10s"/>-->
+            <!--<setHeader headerName="CamelHttpMethod">-->
+            <!--<constant>GET</constant>-->
+            <!--</setHeader>-->
+            <!--<to uri="http4://api.wmata.com/Bus.svc/json/jRoutes?api_key=kfgpmgvfgacx98de9q3xazww"/>-->
+            <!--<to uri="bean:itemRetriever"/>-->
+            <!--<to uri="log:com.wireandwheel.demonstrations?level=INFO"/>-->
+            <!--<log message="{$body}"/>-->
+        <!--</route>-->
+    </camel:camelContext>
+
+    <!-- End Camel Configuration -->
+
+</beans>
